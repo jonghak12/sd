@@ -1,0 +1,36 @@
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody))]
+public class PlayerController : MonoBehaviour
+{
+    public float moveSpeed = 5f;
+
+    private Rigidbody rb;
+    private Vector3 moveInput;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void Update()
+    {
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+
+        moveInput = new Vector3(h, 0f, v).normalized * moveSpeed;
+    }
+        void FixedUpdate()
+        {
+            Vector3 newPosition = rb.position + moveInput * Time.fixedDeltaTime;
+            rb.MovePosition(newPosition);
+
+            // ���� ȸ��
+            if (moveInput != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveInput);
+                rb.MoveRotation(targetRotation);
+            }
+        }
+    }
+//플레이어 움직임 코드
