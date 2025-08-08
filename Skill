@@ -1,0 +1,76 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UseSkill : MonoBehaviour
+{
+
+    public int[] skills = { 0, 0, 0, 0 };
+    //skills[0] = 1
+    public float[] attack1 = { 1.0f, 2.0f, 2.5f , 3.0f };
+    public float attackDamage1
+    { get { return attack1[skills[0]]; } }
+    //attackDamage1 �̰� �ҷ��ͼ� attack1�� ���� ���� �����´�.
+
+    public float[] attack2 = { 1.0f, 2.0f, 2.5f, 3.0f };
+    public float attackDamage2
+    { get { return attack2[skills[1]]; } } //���ξȿ� ���� ��ų ��ġ
+
+    public float[] attack3 = { 1.0f, 2.0f, 2.5f, 3.0f };
+    public float attackDamage3
+    { get { return attack3[skills[2]]; } }
+
+    public float[] attack4 = { 1.0f, 2.0f, 2.5f, 3.0f };
+    public float attackDamage4
+    { get { return attack4[skills[3]]; } }
+
+    private float[] skillcooltime = { 4.0f, 5.0f, 3.0f, 5.0f };
+    public int[] UseMana = { 10, 20, 30, 40 };
+    public int currentMana = 100;
+    public float[] skillRanges = { 4.0f, 4.0f, 4.0f, 4.0f };
+    public GameObject[] skillPrefabs = new GameObject[4];
+
+    public Transform SkillSpawnPoint;
+
+
+
+
+
+
+
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        for (int i = 0; i < skillcooltime.Length; i++)
+        {
+            if (skillcooltime[i] > 0)
+                skillcooltime[i] -= Time.deltaTime;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+            TryUseSkill(0);
+        if (Input.GetKeyDown(KeyCode.X))
+            TryUseSkill(1);
+        if (Input.GetKeyDown(KeyCode.C))
+            TryUseSkill(2);
+        if (Input.GetKeyDown(KeyCode.V))
+            TryUseSkill(3);
+    }
+    void TryUseSkill(int index)
+    {
+        if (index < 0 || index >= skills.Length) return;
+        if (skillcooltime[index] > 0) return;
+        if (currentMana < UseMana[index]) return;
+        if (skillPrefabs.Length <= index || skillPrefabs[index] == null) return;
+
+        currentMana -= UseMana[index];
+        Instantiate(skillPrefabs[index], SkillSpawnPoint.position, SkillSpawnPoint.rotation);
+
+        skillcooltime[index] = skillcooltime[index];
+    }
+}
